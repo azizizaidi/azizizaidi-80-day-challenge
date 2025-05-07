@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event Loop Button Exercise</title>
+    <style>
+        .loading {
+            display: none;
+            margin: 10px 0;
+        }
+        .loading.active {
+            display: block;
+        }
+        .button-container {
+            margin: 20px 0;
+        }
+        button {
+            margin: 0 10px;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <button id="myButton">Click Me</button>
+        <button id="cancelButton" disabled>Cancel Operation</button>
+    </div>
+    <div id="output"></div>
+    <div id="loading" class="loading">Processing...</div>
+
+    <script>
+        const button = document.getElementById('myButton');
+        const cancelButton = document.getElementById('cancelButton');
+        const output = document.getElementById('output');
+        const loading = document.getElementById('loading');
+        let isProcessing = false;
+        let shouldCancel = false;
+
+        button.addEventListener('click', () => {
+            console.log('Button clicked');
+            output.textContent = 'Button clicked!';
+        });
+
+        cancelButton.addEventListener('click', () => {
+            shouldCancel = true;
+            cancelButton.disabled = true;
+            output.textContent = 'Operation cancelled!';
+            loading.classList.remove('active');
+        });
+
+        // Simulate a blocking operation
+        console.log('Starting blocking operation...');
+        loading.classList.add('active');
+        cancelButton.disabled = false;
+        isProcessing = true;
+        shouldCancel = false;
+
+        const start = Date.now();
+        while (Date.now() - start < 5000 && !shouldCancel) {
+            // Block the main thread for 5 seconds or until cancelled
+        }
+
+        isProcessing = false;
+        cancelButton.disabled = true;
+        loading.classList.remove('active');
+        console.log('Blocking operation completed');
+
+        // Note: During the 5-second blocking operation,
+        // the button click won't be processed because
+        // the event loop is blocked
+    </script>
+</body>
+</html> 
