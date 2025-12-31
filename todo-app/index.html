@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>To-Do App</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 2em;
+    }
+    h1 {
+      text-align: center;
+    }
+    #todo-input {
+      width: 100%;
+      padding: 0.5em;
+      font-size: 1em;
+    }
+    #add-button {
+      width: 100%;
+      padding: 0.5em;
+      font-size: 1em;
+      margin-top: 0.5em;
+    }
+    #todo-list {
+      list-style: none;
+      padding: 0;
+    }
+    .todo-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5em;
+      border-bottom: 1px solid #ccc;
+    }
+    .todo-item button {
+      margin-left: 0.5em;
+    }
+  </style>
+</head>
+<body>
+  <h1>To-Do App</h1>
+  <input type="text" id="todo-input" placeholder="Enter a new to-do">
+  <button id="add-button">Add</button>
+  <ul id="todo-list"></ul>
+
+  <script>
+    const todoInput = document.getElementById('todo-input');
+    const addButton = document.getElementById('add-button');
+    const todoList = document.getElementById('todo-list');
+
+    let todos = [];
+
+    function renderTodos() {
+      todoList.innerHTML = '';
+      todos.forEach((todoText, index) => {
+        const todoItem = document.createElement('li');
+        todoItem.className = 'todo-item';
+
+        const textSpan = document.createElement('span');
+        textSpan.textContent = todoText; // Use textContent to prevent XSS
+
+        const buttonDiv = document.createElement('div');
+
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Edit';
+        editButton.addEventListener('click', () => editTodo(index));
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', () => deleteTodo(index));
+
+        buttonDiv.appendChild(editButton);
+        buttonDiv.appendChild(deleteButton);
+
+        todoItem.appendChild(textSpan);
+        todoItem.appendChild(buttonDiv);
+
+        todoList.appendChild(todoItem);
+      });
+    }
+
+    function addTodo() {
+      const todoText = todoInput.value.trim();
+      if (todoText) {
+        todos.push(todoText);
+        todoInput.value = '';
+        renderTodos();
+      }
+    }
+
+    function editTodo(index) {
+      const newTodoText = prompt('Enter new to-do text:', todos[index]);
+      if (newTodoText) {
+        todos[index] = newTodoText.trim();
+        renderTodos();
+      }
+    }
+
+    function deleteTodo(index) {
+      todos.splice(index, 1);
+      renderTodos();
+    }
+
+    addButton.addEventListener('click', addTodo);
+  </script>
+</body>
+</html>
